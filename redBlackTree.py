@@ -23,7 +23,6 @@ class RedBlackNode(object):
     right_node = None
     parent = None
     nil = False
-    visited = False
 
     #setter methods to be referenced by property methods below
     def setParent(self, parent):
@@ -44,10 +43,6 @@ class RedBlackNode(object):
     def setColor(self, color):
         self._color = color
 
-    def setVisited(self, visited):
-        self._visited = visited
-
-
     #property methods
     parent = property(fget=lambda self: self._parent if self._parent!=None else RedBlackNode(None, True),fset=setParent)
     left = property(fget=lambda self: self._left if self._left!=None else RedBlackNode(None, True), fset = setLeft)
@@ -55,7 +50,6 @@ class RedBlackNode(object):
     value = property(fget=lambda self: self._value ,fset=setValue)
     nil = property(fget=lambda self: self._nil, fset=setNil)
     color = property(fget=lambda self: self._color ,fset=setColor)
-    visited = property(fget=lambda self: self._visited ,fset=setVisited)
 
     def __init__(self, value=None, nil=False):
          self._color = "black"
@@ -64,7 +58,6 @@ class RedBlackNode(object):
          self._right = None
          self._parent = None
          self._nil=nil
-         self._visited = False
 
 #red black tree to represent tree to hold red black nodes
 class RedBlackTree(object):
@@ -139,26 +132,20 @@ class RedBlackTree(object):
         stack = self.tree_level_visit(self.root)
         if stack == None:
             return None
-        for node in stack:
-            node.visited = False
-        #print [node.value for node in stack]
         return [node for node in stack]
 
     def tree_level_visit(self, current):
         stack = []
         if current == None:
             return
-        current.visited = True
+
         stack.append(current)
         stack.append(current.left)
         stack.append(current.right)
 
-        for i in range(0 , len(stack)):
-            if stack[i].visited == False:
-                stack.append(stack[i].left)
-                stack.append(stack[i].right)
-                stack[i].visited = True
-
+        for i in range(1, len(stack)):
+            stack.append(stack[i].left)
+            stack.append(stack[i].right)
         return stack
 
 
